@@ -25,6 +25,34 @@ if(isset($_GET['action']))
             sqlsrv_close($conn);
       } catch(Exception $e){}
     }
+
+    if($action == "update")
+    {
+        $field = $_GET['field'];
+        if($field == "balance")
+        {
+            $balance = $_GET['balance'];
+            $id = $_GET['contactId'];
+            try {
+                $conn = OpenConnection();
+                if (sqlsrv_begin_transaction($conn) == FALSE){
+                    $dbFlag = 2;
+                }
+        
+                $sqlQry = "UPDATE [Wallet] SET [Balance] = [Balance] - $balance WHERE ContactId = $id";
+                $exec = sqlsrv_query($conn, $sqlQry);
+                
+                if($exec){
+                    sqlsrv_commit($conn);
+                    $data = array("trans" => 1);
+                } else 
+                    $data = array("trans" => 0);
+                
+                sqlsrv_free_stmt($exec);
+                sqlsrv_close($conn);
+            } catch(Exception $e){}
+        }
+    }
 }
 
 header("Content-Type: application/json");

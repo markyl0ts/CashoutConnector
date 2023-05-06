@@ -31,6 +31,58 @@ if(isset($_GET['action']))
             sqlsrv_close($conn);
         } catch(Exception $e){}
     }
+
+    if($action == "update")
+    {
+        $field = $_GET['field'];
+        if($field == "balance")
+        {
+            $id = $_GET['id'];
+            $total = $_GET['total'];
+            try {
+                $conn = OpenConnection();
+                if (sqlsrv_begin_transaction($conn) == FALSE){
+                    $dbFlag = 2;
+                }
+        
+                $sqlQry = "UPDATE [System] SET [Balance] = ".$total." WHERE Id = $id";
+                $exec = sqlsrv_query($conn, $sqlQry);
+                
+                if($exec){
+                    sqlsrv_commit($conn);
+                    $data = array("trans" => 1);
+                } else 
+                    $data = array("trans" => 0);
+                
+                sqlsrv_free_stmt($exec);
+                sqlsrv_close($conn);
+            } catch(Exception $e){}
+        }
+
+        if($field == "AccuAmount")
+        {
+            $id = $_GET['id'];
+            $fee = $_GET['fee'];
+            try {
+                $conn = OpenConnection();
+                if (sqlsrv_begin_transaction($conn) == FALSE){
+                    $dbFlag = 2;
+                }
+        
+                $sqlQry = "UPDATE [System] SET [AccumulatedAmount] = [AccumulatedAmount] + $fee WHERE Id = $id";
+                $exec = sqlsrv_query($conn, $sqlQry);
+                
+                if($exec){
+                    sqlsrv_commit($conn);
+                    $data = array("trans" => 1);
+                } else 
+                    $data = array("trans" => 0);
+                
+                sqlsrv_free_stmt($exec);
+                sqlsrv_close($conn);
+            } catch(Exception $e){}
+        }
+    }
 }
 
 header("Content-Type: application/json");

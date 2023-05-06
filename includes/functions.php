@@ -1,7 +1,8 @@
 <?php
 
 function OpenConnection(){
-    $serverName = "192.168.254.121,1433";
+    //$serverName = "192.168.254.121,1433";
+    $serverName = "localhost";
     $connectionOptions = array("Database"=>"CashOut",
         "Uid"=>"couser", "PWD"=>"qqQQ11!!");
     $conn = sqlsrv_connect($serverName, $connectionOptions);
